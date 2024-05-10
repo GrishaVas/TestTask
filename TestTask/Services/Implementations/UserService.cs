@@ -32,7 +32,6 @@ namespace TestTask.Services.Implementations
         public async Task<List<User>> GetUsers()
         {
             var users = await _dbContext.Users
-                .Include(u => u.Orders)
                 .Where(u => u.Orders.Any(o => o.CreatedAt.Year == 2010 && o.Status == OrderStatus.Paid))
                 .ToListAsync();
 
