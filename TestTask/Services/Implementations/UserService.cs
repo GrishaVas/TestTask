@@ -16,21 +16,16 @@ namespace TestTask.Services.Implementations
         }
 
         public async Task<User> GetUser()
-        {
+        {//Возвращать пользователя с максимальной общей суммой товаров, доставленных в 2003
             var user = await _dbContext.Users
-                .OrderByDescending(u => u.Orders.Where(o => o.CreatedAt.Year == 2003).Sum(o => o.Price))
+                .OrderByDescending(u => u.Orders.Where(o => o.CreatedAt.Year == 2003 && o.Status == OrderStatus.Delivered).Sum(o => o.Price))
                 .FirstOrDefaultAsync();
-
-            if (user == null)
-            {
-                throw new ArgumentException("User does not exist!");
-            }
 
             return user;
         }
 
         public async Task<List<User>> GetUsers()
-        {
+        {//Возвращать пользователей у которых есть оплаченные заказы в 2010
             var users = await _dbContext.Users
                 .Where(u => u.Orders.Any(o => o.CreatedAt.Year == 2010 && o.Status == OrderStatus.Paid))
                 .ToListAsync();

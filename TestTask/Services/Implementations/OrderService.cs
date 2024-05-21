@@ -16,22 +16,17 @@ namespace TestTask.Services.Implementations
         }
 
         public async Task<Order> GetOrder()
-        {
+        {//Возвращать самый новый заказ, в котором больше одного предмета.
             var order = await _dbContext.Orders
                 .Where(o => o.Quantity > 1)
                 .OrderByDescending(o => o.CreatedAt)
                 .FirstOrDefaultAsync();
 
-            if (order == null)
-            {
-                throw new ArgumentException("Order does not exist!");
-            }
-
             return order;
         }
 
         public async Task<List<Order>> GetOrders()
-        {
+        {//Возвращать заказы от активных пользователей, отсортированные по дате создания
             var orders = await _dbContext.Orders
                 .Where(o => o.User.Status == UserStatus.Active)
                 .OrderBy(o => o.CreatedAt)
